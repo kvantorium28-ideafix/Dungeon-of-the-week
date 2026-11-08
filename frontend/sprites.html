@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Спрайты — Данж недели</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <style>
+    body { margin: 0; padding: 24px 16px; background: #1B1630; color: #F1EADB; font: 16px/1.4 'PT Sans', sans-serif; }
+    h1, h2 { font-family: 'Tiny5', sans-serif; font-weight: 400; }
+    .grid { display: flex; flex-wrap: wrap; gap: 16px; }
+    figure { margin: 0; padding: 16px; background: #2A2346; border: 4px solid #3E3566; text-align: center; }
+    figure .sprite { display: block; margin: 0 auto 8px; }
+    figure svg { width: 100%; height: 100%; }
+    figcaption { font-size: .9rem; color: #A99FC4; }
+    .sprite.anim { position: relative; }
+    .sprite.anim svg { position: absolute; inset: 0; }
+    .sprite.anim svg.f1 { visibility: hidden; }
+  </style>
+</head>
+<body>
+  <h1>Спрайты</h1>
+  <p>Рисуются в <code>js/sprites.js</code>. Поменяли букву — обновили эту страницу.</p>
+  <h2>Монстры и предметы</h2>
+  <div class="grid" id="sprites"></div>
+  <h2>Герой</h2>
+  <div class="grid" id="boys"></div>
+  <h2>Героиня</h2>
+  <div class="grid" id="girls"></div>
+  <h2>Оружие</h2>
+  <div class="grid" id="weapons"></div>
+  <script type="module">
+    import { ALL_SPRITES, sprite } from './js/sprites.js?v=9';
+    import { ALL_SKINS, WEAPONS, heroSprite, weaponIcon } from './js/hero.js?v=9';
+    const $ = (s) => document.querySelector(s);
+    $('#sprites').innerHTML = ALL_SPRITES
+      .map((n) => `<figure>${sprite(n, 'sheet')}<figcaption>${n}</figcaption></figure>`).join('');
+    for (const [id, gender] of [['#boys', 'm'], ['#girls', 'f']]) {
+      $(id).innerHTML = ALL_SKINS
+        .map((s) => `<figure>${heroSprite({ skin: s, gender }, 'sheet')}<figcaption>${s}</figcaption></figure>`).join('');
+    }
+    $('#weapons').innerHTML = Object.keys(WEAPONS)
+      .map((w) => [1, 2, 3].map((t) => `<figure>${heroSprite({ skin: 'blue', weapon: w, weapon_tier: t }, '', 3)}${weaponIcon(w, t, 5)}<figcaption>${w} ${t}</figcaption></figure>`).join('')).join('');
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+services:
+  web:
+    build: .
+    env_file:
+      - path: .env
+        required: false
+    ports:
+      - "8000:8000"
+    volumes:
+      - data:/data
+    restart: unless-stopped
+
+  # бот запускается так: docker compose --profile bot up -d
+  bot:
+    build: .
+    command: ["python", "-m", "bot.run"]
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - data:/data
+    depends_on:
+      - web
+    restart: unless-stopped
+    profiles: ["bot"]
+
+volumes:
+  data:

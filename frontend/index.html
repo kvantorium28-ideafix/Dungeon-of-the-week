@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1B1630">
+  <title>Данж недели</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 8' shape-rendering='crispEdges'%3E%3Crect x='3' y='0' width='1' height='1' fill='%23F2A541'/%3E%3Crect x='2' y='1' width='3' height='1' fill='%23F2A541'/%3E%3Crect x='3' y='1' width='1' height='1' fill='%23F2C14E'/%3E%3Crect x='1' y='2' width='5' height='1' fill='%23F2A541'/%3E%3Crect x='2' y='2' width='3' height='1' fill='%23F2C14E'/%3E%3Crect x='2' y='3' width='3' height='1' fill='%23F2A541'/%3E%3Crect x='3' y='4' width='1' height='4' fill='%238A5A33'/%3E%3C/svg%3E">
+</head>
+<body>
+  <!-- Экран входа -->
+  <main id="welcome" class="welcome" hidden>
+    <div class="welcome-art" id="welcome-art"></div>
+    <h1 class="welcome-title">Данж недели</h1>
+    <p class="welcome-lead">Учебная неделя — это подземелье. Задания — монстры, большие проекты бьются по шагам, а контрольная — босс, которого ты ослабишь заранее.</p>
+    <form id="welcome-form" class="welcome-form">
+      <fieldset class="gender-pick">
+        <legend>Кто отправится в поход?</legend>
+        <label class="gender-opt"><input type="radio" name="gender" value="m" checked><span id="pick-m"></span>Герой</label>
+        <label class="gender-opt"><input type="radio" name="gender" value="f"><span id="pick-f"></span>Героиня</label>
+      </fieldset>
+      <label for="hero-name">Как зовут?</label>
+      <div class="row">
+        <input id="hero-name" name="name" maxlength="40" autocomplete="nickname" placeholder="Например, Маша" required>
+        <button class="btn btn-torch" type="submit">Войти в подземелье</button>
+      </div>
+      <p class="hint">Аккаунт создастся на этом устройстве. Ссылку для входа с телефона найдёшь в профиле.</p>
+    </form>
+  </main>
+
+  <!-- Основной экран -->
+  <div id="app" class="app" hidden>
+    <header class="hero-bar">
+      <button class="hero-card" id="open-profile" type="button" aria-label="Профиль героя">
+        <span id="hero-avatar" class="hero-avatar"></span>
+        <span class="hero-meta">
+          <span class="hero-name" id="hero-name-label"></span>
+          <span class="hero-level"><span id="hero-level"></span> уровень</span>
+          <span class="xp-bar" aria-hidden="true"><span id="xp-fill"></span></span>
+        </span>
+      </button>
+      <nav class="hero-actions" aria-label="Герой">
+        <button type="button" class="act-btn" id="open-skills"><span id="skills-icon"></span>Навыки</button>
+        <button type="button" class="act-btn" id="open-gear"><span id="gear-icon"></span>Снаряжение</button>
+      </nav>
+      <div class="bar-right">
+        <button type="button" class="sound-btn" id="sound-btn" aria-pressed="false" title="Звук">Звук выкл</button>
+        <div class="stamina" id="stamina"></div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <section class="side">
+        <article class="scroll" id="guide" aria-live="polite"></article>
+
+        <form class="quick-add" id="quick-add">
+          <label for="phrase">Что задали?</label>
+          <div class="row">
+            <input id="phrase" maxlength="500" autocomplete="off"
+                   placeholder="в пятницу контрольная по алгебре, а в среду доклад по истории">
+            <button class="btn btn-torch" type="submit">Разобрать</button>
+          </div>
+          <button class="link-btn" type="button" id="manual-add">Добавить вручную</button>
+        </form>
+
+        <div id="drafts" class="drafts" hidden></div>
+
+        <section id="fog" class="fog-zone" hidden>
+          <h2>Туман</h2>
+          <p class="hint">Срок прошёл — это не провал. Назначь новую дату, и монстр вернётся на карту.</p>
+          <ul id="fog-list" class="plain-list"></ul>
+        </section>
+
+        <section id="ahead" class="ahead" hidden>
+          <h2>Впереди</h2>
+          <ul id="ahead-list" class="plain-list"></ul>
+        </section>
+
+        <section id="week" class="week" hidden>
+          <h2>Итоги недели</h2>
+          <dl id="week-stats" class="week-stats"></dl>
+          <p id="week-note" class="hint"></p>
+          <div id="trophy-list" class="trophy-list"></div>
+        </section>
+      </section>
+
+      <section class="map" aria-label="Неделя">
+        <header class="map-head">
+          <h2 class="map-title">Неделя</h2>
+          <div class="view-switch" role="group" aria-label="Вид">
+            <button type="button" data-view="trail" aria-pressed="true">Поход</button>
+            <button type="button" data-view="calendar" aria-pressed="false">Календарь</button>
+          </div>
+        </header>
+        <div id="trail" class="trail"></div>
+        <ol id="rooms" class="rooms" hidden></ol>
+      </section>
+    </div>
+  </div>
+
+  <!-- Проверка заданий на телефоне -->
+  <dialog id="drafts-sheet" class="sheet drafts-sheet" aria-label="Проверь, что записать">
+    <div id="drafts-sheet-body"></div>
+  </dialog>
+
+  <!-- Карточка монстра -->
+  <dialog id="monster" class="sheet">
+    <div id="monster-body"></div>
+  </dialog>
+
+  <!-- Снаряжение -->
+  <dialog id="profile" class="sheet">
+    <div id="profile-body"></div>
+  </dialog>
+
+  <dialog id="skills" class="sheet">
+    <div id="skills-body"></div>
+  </dialog>
+
+  <dialog id="gear" class="sheet">
+    <div id="gear-body"></div>
+  </dialog>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <script type="module" src="js/app.js?v=9"></script>
+</body>
+</html>

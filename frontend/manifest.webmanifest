@@ -1,0 +1,16 @@
+{
+  "name": "Данж недели",
+  "short_name": "Данж",
+  "description": "Учебная неделя как подземелье: задания-монстры, контрольные-боссы.",
+  "lang": "ru",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#1B1630",
+  "theme_color": "#1B1630",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
